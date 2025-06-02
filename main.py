@@ -541,14 +541,19 @@ class PodcastsPage(QWidget):
         layout.addWidget(featured_label)
         featured_scroll = QScrollArea()
         featured_scroll.setWidgetResizable(True)
-        featured_widget = QWidget()
-        featured_layout = QHBoxLayout(featured_widget)
+        featured_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        featured_scroll.setStyleSheet("border: none;")
+        
+        featured_content = QWidget()
+        featured_content_layout = QHBoxLayout(featured_content)
+        featured_content_layout.setSpacing(20)
+        
         for podcast in self.podcasts_data.get('podcasts', []):
             if podcast.get('featured') or podcast.get('recent'):
                 card = PodcastCard(podcast)
-                featured_layout.addWidget(card)
-        featured_layout.addStretch()
-        featured_scroll.setWidget(featured_widget)
+                featured_content_layout.addWidget(card)
+        
+        featured_scroll.setWidget(featured_content)
         featured_scroll.setFixedHeight(120)
         featured_scroll.setStyleSheet("border: none;")
         layout.addWidget(featured_scroll)
