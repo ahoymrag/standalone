@@ -452,6 +452,118 @@ class DownloadsPage(QWidget):
         else:
             QMessageBox.warning(self, "Warning", "Downloads folder not found!")
 
+class PodcastCard(GlassFrame):
+    def __init__(self, podcast, parent=None):
+        super().__init__(parent)
+        self.podcast = podcast
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(15)
+
+        # Cover Art
+        cover_label = QLabel()
+        pixmap = QPixmap()
+        try:
+            img_data = requests.get(podcast['cover_art']).content
+            pixmap.loadFromData(img_data)
+        except:
+            pixmap = QPixmap(100, 100)
+            pixmap.fill(QColor("#333"))
+        cover_label.setPixmap(pixmap.scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        cover_label.setFixedSize(80, 80)
+        layout.addWidget(cover_label)
+
+        # Info
+        info_layout = QVBoxLayout()
+        title = QLabel(podcast['title'])
+        title.setStyleSheet("font-size: 16px; font-weight: bold; color: white;")
+        info_layout.addWidget(title)
+        host = QLabel(f"Host: <b>{podcast['host']}</b>")
+        host.setStyleSheet("color: #e94560;")
+        info_layout.addWidget(host)
+        category = QLabel(f"Category: {podcast['category']}")
+        category.setStyleSheet("color: #aaa;")
+        info_layout.addWidget(category)
+        # Badges
+        badge_layout = QHBoxLayout()
+        if podcast.get('featured'):
+            badge = QLabel("Featured")
+            badge.setStyleSheet("background: rgba(233,69,96,0.3); color: #e94560; border-radius: 8px; padding: 2px 8px; font-size: 12px;")
+            badge_layout.addWidget(badge)
+        if podcast.get('recent'):
+            badge = QLabel("Recent")
+            badge.setStyleSheet("background: rgba(255,255,255,0.2); color: #fff; border-radius: 8px; padding: 2px 8px; font-size: 12px;")
+            badge_layout.addWidget(badge)
+        badge_layout.addStretch()
+        info_layout.addLayout(badge_layout)
+        layout.addLayout(info_layout)
+
+        # Duration
+        duration = QLabel(podcast['duration'])
+        duration.setStyleSheet("color: #fff; background: rgba(255,255,255,0.1); border-radius: 6px; padding: 2px 8px;")
+        layout.addWidget(duration)
+
+        self.setFixedHeight(100)
+
+class PodcastsPage(QWidget):
+    def __init__(self, podcasts_data, parent=None):
+        super().__init__(parent)
+        self.podcasts_data = podcasts_data
+        self.setup_ui()
+
+    def setup_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(15)
+
+        # Search bar (placeholder)
+        search_bar = QLineEdit()
+        search_bar.setPlaceholderText("Search podcasts by title, host, or tag...")
+        search_bar.setStyleSheet("background: rgba(255,255,255,0.1); color: white; border-radius: 8px; padding: 8px;")
+        layout.addWidget(search_bar)
+
+        # Category filter (placeholder)
+        filter_layout = QHBoxLayout()
+        filter_label = QLabel("Filter by category:")
+        filter_label.setStyleSheet("color: #fff;")
+        filter_layout.addWidget(filter_label)
+        for cat in self.podcasts_data.get('categories', []):
+            btn = QPushButton(cat['label'])
+            btn.setStyleSheet("background: rgba(255,255,255,0.15); color: #e94560; border-radius: 8px; padding: 4px 12px;")
+            btn.setEnabled(False)  # Placeholder for now
+            filter_layout.addWidget(btn)
+        filter_layout.addStretch()
+        layout.addLayout(filter_layout)
+
+        # Featured/recent section (placeholder)
+        featured_label = QLabel("Featured & Recent")
+        featured_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #e94560;")
+        layout.addWidget(featured_label)
+        featured_scroll = QScrollArea()
+        featured_scroll.setWidgetResizable(True)
+        featured_widget = QWidget()
+        featured_layout = QHBoxLayout(featured_widget)
+        for podcast in self.podcasts_data.get('podcasts', []):
+            if podcast.get('featured') or podcast.get('recent'):
+                card = PodcastCard(podcast)
+                featured_layout.addWidget(card)
+        featured_layout.addStretch()
+        featured_scroll.setWidget(featured_widget)
+        featured_scroll.setFixedHeight(120)
+        featured_scroll.setStyleSheet("border: none;")
+        layout.addWidget(featured_scroll)
+
+        # All podcasts list
+        all_label = QLabel("All Podcasts")
+        all_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #fff;")
+        layout.addWidget(all_label)
+        podcasts_list = QVBoxLayout()
+        for podcast in self.podcasts_data.get('podcasts', []):
+            card = PodcastCard(podcast)
+            podcasts_list.addWidget(card)
+        podcasts_list.addStretch()
+        layout.addLayout(podcasts_list)
+
 class AhoyIndieMedia(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -560,7 +672,8 @@ class AhoyIndieMedia(QMainWindow):
             ("Dashboard", self.show_dashboard),
             ("Library", self.show_library),
             ("Playlists", self.show_playlists),
-            ("Downloads", self.show_downloads)
+            ("Downloads", self.show_downloads),
+            ("Podcasts", self.show_podcasts)
         ]
         
         for text, callback in nav_buttons:
@@ -616,6 +729,8 @@ class AhoyIndieMedia(QMainWindow):
         self.content_stack.addWidget(QWidget())  # Playlists page
         self.downloads_page = DownloadsPage()
         self.content_stack.addWidget(self.downloads_page)
+        self.podcasts_page = PodcastsPage(self.load_podcasts_data())
+        self.content_stack.addWidget(self.podcasts_page)
         
         main_layout.addWidget(self.content_stack)
 
@@ -716,6 +831,9 @@ class AhoyIndieMedia(QMainWindow):
 
     def show_downloads(self):
         self.content_stack.setCurrentIndex(3)
+
+    def show_podcasts(self):
+        self.content_stack.setCurrentIndex(4)
 
     def download_and_play(self, url):
         try:
@@ -881,6 +999,10 @@ class AhoyIndieMedia(QMainWindow):
         """Start a new download batch with a new ID"""
         self.current_batch_id = str(uuid.uuid4())[:8]
         self.batch_start_time = datetime.now()
+
+    def load_podcasts_data(self):
+        with open('data/tempRefData/podcasts.json', 'r') as f:
+            return json.load(f)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
