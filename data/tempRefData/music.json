@@ -1,0 +1,208 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2024-03-19",
+  "metadata": {
+    "totalSongs": 52,
+    "totalArtists": 10,
+    "totalAlbums": 15,
+    "totalPlaylists": 5
+  },
+  "artists": [
+    {
+      "id": "artist_1",
+      "name": "Samuel Dylan Witch",
+      "bio": "Indie folk artist known for soulful lyrics and acoustic melodies",
+      "image": "https://i.ytimg.com/vi/XDH0X-dF4GM/maxresdefault.jpg",
+      "genres": ["Indie Folk", "Acoustic", "Singer-Songwriter"],
+      "monthlyListeners": 25000,
+      "verified": true,
+      "social": {
+        "website": "https://ahoy.ooo/artist/total/sdw/sdw.html",
+        "instagram": "@samueldylanwitch",
+        "twitter": "@samueldylanwitch"
+      }
+    },
+    {
+      "id": "artist_2",
+      "name": "Cambell Rice",
+      "bio": "Alternative rock artist with a unique blend of electronic and acoustic elements",
+      "image": "https://m.media-amazon.com/images/I/61APLxryThL._UXNaN_FMjpg_QL85_.jpg",
+      "genres": ["Alternative Rock", "Indie Pop"],
+      "monthlyListeners": 18000,
+      "verified": true,
+      "social": {
+        "website": "https://ahoy.ooo/artist/total/cambellRice/cambellRice.html",
+        "instagram": "@cambellrice",
+        "twitter": "@cambellrice"
+      }
+    }
+  ],
+  "albums": [
+    {
+      "id": "album_1",
+      "title": "Seen Better Days",
+      "artist": "Samuel Dylan Witch",
+      "artistId": "artist_1",
+      "releaseDate": "2023-06-15",
+      "genre": "Indie Folk",
+      "coverArt": "https://i.ytimg.com/vi/XDH0X-dF4GM/maxresdefault.jpg",
+      "tracks": [
+        {
+          "id": 1,
+          "title": "Seen Better Days",
+          "duration": 245,
+          "trackNumber": 1,
+          "mp3url": "https://ahoycollection.s3.us-east-2.amazonaws.com/01%20I%27ve%20Seen%20Better%20Days.mp3",
+          "explicit": false
+        },
+        {
+          "id": 2,
+          "title": "Beneath the Willow Tree",
+          "duration": 198,
+          "trackNumber": 2,
+          "mp3url": "https://ahoycollection.s3.us-east-2.amazonaws.com/Beneath+the+Willow+Tree.mp3",
+          "explicit": false
+        }
+      ]
+    },
+    {
+      "id": "album_2",
+      "title": "Sunflower Sessions",
+      "artist": "Cambell Rice",
+      "artistId": "artist_2",
+      "releaseDate": "2023-08-20",
+      "genre": "Alternative Rock",
+      "coverArt": "https://m.media-amazon.com/images/I/61APLxryThL._UXNaN_FMjpg_QL85_.jpg",
+      "tracks": [
+        {
+          "id": 6,
+          "title": "Far From Here",
+          "duration": 215,
+          "trackNumber": 1,
+          "mp3url": "https://ahoycollection.s3.us-east-2.amazonaws.com/Campbell+Rice-+From+Here.mp3",
+          "explicit": false
+        },
+        {
+          "id": 7,
+          "title": "Sunflower",
+          "duration": 228,
+          "trackNumber": 2,
+          "mp3url": "https://ahoycollection.s3.us-east-2.amazonaws.com/Campbell+Rice-Sunflower.mp3",
+          "explicit": false
+        }
+      ]
+    }
+  ],
+  "playlists": [
+    {
+      "id": "playlist_1",
+      "title": "Featured Artists",
+      "description": "Our top picks from Ahoy Indie Media artists",
+      "coverImage": "https://ahoycollection.s3.us-east-2.amazonaws.com/ready_theTinesAlbumArtwork.jpg",
+      "curator": "Ahoy Indie Media",
+      "tracks": [1, 7, 9, 11, 21],
+      "createdAt": "2024-01-01",
+      "updatedAt": "2024-03-19",
+      "featured": true
+    },
+    {
+      "id": "playlist_2",
+      "title": "New Releases",
+      "description": "Latest tracks from our artists",
+      "coverImage": "https://storage.googleapis.com/ahoy-song-collection/ahoy_jake-custer.jpg",
+      "curator": "Ahoy Indie Media",
+      "tracks": [48, 49, 50, 51, 52],
+      "createdAt": "2024-03-01",
+      "updatedAt": "2024-03-19",
+      "featured": true
+    }
+  ],
+  "songs": [
+    {
+      "id": 1,
+      "title": "Seen Better Days",
+      "artist": "Samuel Dylan Witch",
+      "artistId": "artist_1",
+      "albumId": "album_1",
+      "duration": 245,
+      "mp3url": "https://ahoycollection.s3.us-east-2.amazonaws.com/01%20I%27ve%20Seen%20Better%20Days.mp3",
+      "coverArt": "https://i.ytimg.com/vi/XDH0X-dF4GM/maxresdefault.jpg",
+      "releaseDate": "2023-06-15",
+      "genre": "Indie Folk",
+      "explicit": false,
+      "featured": true,
+      "new": false,
+      "stats": {
+        "plays": 12500,
+        "likes": 850,
+        "bookmarks": 320
+      },
+      "metadata": {
+        "bpm": 120,
+        "key": "G Major",
+        "mood": ["Melancholic", "Reflective"],
+        "instruments": ["Acoustic Guitar", "Piano", "Strings"]
+      }
+    },
+    {
+      "id": 48,
+      "title": "Float",
+      "artist": "Spider in Stereo",
+      "artistId": "artist_10",
+      "albumId": "album_15",
+      "duration": 198,
+      "mp3url": "https://storage.googleapis.com/ahoy-song-collection/Spide%20in%20Stereo%20-%20Float.mp3",
+      "coverArt": "https://storage.googleapis.com/ahoy-song-collection/Spider%20in%20Stereo%20-%20Float.jpg",
+      "releaseDate": "2024-02-19",
+      "genre": "Indie Rock",
+      "explicit": false,
+      "featured": false,
+      "new": true,
+      "stats": {
+        "plays": 3200,
+        "likes": 245,
+        "bookmarks": 98
+      },
+      "metadata": {
+        "bpm": 132,
+        "key": "D Major",
+        "mood": ["Upbeat", "Energetic"],
+        "instruments": ["Electric Guitar", "Drums", "Bass"]
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat_1",
+      "name": "Featured",
+      "description": "Hand-picked tracks from our artists",
+      "image": "https://ahoycollection.s3.us-east-2.amazonaws.com/ready_theTinesAlbumArtwork.jpg",
+      "playlists": ["playlist_1"]
+    },
+    {
+      "id": "cat_2",
+      "name": "New Releases",
+      "description": "Latest tracks from our artists",
+      "image": "https://storage.googleapis.com/ahoy-song-collection/ahoy_jake-custer.jpg",
+      "playlists": ["playlist_2"]
+    }
+  ],
+  "genres": [
+    {
+      "id": "genre_1",
+      "name": "Indie Folk",
+      "description": "Independent folk music with modern influences",
+      "image": "https://i.ytimg.com/vi/XDH0X-dF4GM/maxresdefault.jpg",
+      "artists": ["artist_1"],
+      "playlists": ["playlist_1"]
+    },
+    {
+      "id": "genre_2",
+      "name": "Alternative Rock",
+      "description": "Modern alternative rock with diverse influences",
+      "image": "https://m.media-amazon.com/images/I/61APLxryThL._UXNaN_FMjpg_QL85_.jpg",
+      "artists": ["artist_2"],
+      "playlists": ["playlist_1"]
+    }
+  ]
+} 

@@ -1,0 +1,187 @@
+{
+    "artists": [
+        {
+            "id": "artist1",
+            "name": "Lena Rivers",
+            "genre": "Indie Folk",
+            "bio": "Lena Rivers is an indie folk singer-songwriter known for her haunting melodies and poetic lyrics. Born in Portland, Oregon, she began her musical journey at the age of 15, performing in local coffee shops. Her music often explores themes of nature, personal growth, and the human condition.",
+            "discography": [
+                {
+                    "title": "Whispers in the Wind",
+                    "year": 2022,
+                    "type": "album",
+                    "tracks": [
+                        "Morning Light",
+                        "River's Edge",
+                        "Whispers in the Wind",
+                        "Autumn Leaves",
+                        "The Journey Home"
+                    ]
+                },
+                {
+                    "title": "Echoes of the Past",
+                    "year": 2020,
+                    "type": "EP",
+                    "tracks": [
+                        "Memories",
+                        "Old Photographs",
+                        "Time Stands Still"
+                    ]
+                }
+            ],
+            "notable_works": [
+                "Morning Light (2022)",
+                "River's Edge (2022)",
+                "Memories (2020)"
+            ],
+            "image_url": "/static/img/artists/lena_rivers.jpg"
+        },
+        {
+            "id": "artist2",
+            "name": "The Midnight Circuit",
+            "genre": "Electronic",
+            "bio": "The Midnight Circuit is an electronic music duo consisting of producers Alex Chen and Maya Rodriguez. Based in Berlin, they blend elements of techno, house, and ambient music to create immersive soundscapes. Their live performances are known for their stunning visual displays and energetic atmosphere.",
+            "discography": [
+                {
+                    "title": "Neon Dreams",
+                    "year": 2023,
+                    "type": "album",
+                    "tracks": [
+                        "Electric Pulse",
+                        "Neon Dreams",
+                        "Midnight Drive",
+                        "City Lights",
+                        "Digital Horizon"
+                    ]
+                },
+                {
+                    "title": "Circuit Breaker",
+                    "year": 2021,
+                    "type": "album",
+                    "tracks": [
+                        "Voltage",
+                        "Current Flow",
+                        "Resistance",
+                        "Power Surge"
+                    ]
+                }
+            ],
+            "notable_works": [
+                "Electric Pulse (2023)",
+                "Neon Dreams (2023)",
+                "Voltage (2021)"
+            ],
+            "image_url": "/static/img/artists/midnight_circuit.jpg"
+        },
+        {
+            "id": "artist3",
+            "name": "Jazz Collective Quartet",
+            "genre": "Jazz",
+            "bio": "The Jazz Collective Quartet is a group of four accomplished musicians who came together in New York City's vibrant jazz scene. Led by saxophonist Marcus Johnson, the quartet is known for their innovative arrangements of jazz standards and original compositions that push the boundaries of the genre.",
+            "discography": [
+                {
+                    "title": "Urban Jazzscapes",
+                    "year": 2022,
+                    "type": "album",
+                    "tracks": [
+                        "City Nights",
+                        "Subway Serenade",
+                        "Brooklyn Bridge",
+                        "Central Park Sunset",
+                        "Times Square Blues"
+                    ]
+                },
+                {
+                    "title": "Live at Blue Note",
+                    "year": 2021,
+                    "type": "live album",
+                    "tracks": [
+                        "Autumn in New York",
+                        "Take Five",
+                        "So What",
+                        "Blue in Green"
+                    ]
+                }
+            ],
+            "notable_works": [
+                "City Nights (2022)",
+                "Subway Serenade (2022)",
+                "Autumn in New York (2021)"
+            ],
+            "image_url": "/static/img/artists/jazz_collective.jpg"
+        },
+        {
+            "id": "artist4",
+            "name": "Sarah Moon & The Lunar Tides",
+            "genre": "Alternative Rock",
+            "bio": "Sarah Moon & The Lunar Tides is an alternative rock band from Seattle, Washington. Fronted by singer-songwriter Sarah Moon, the band combines elements of grunge, indie rock, and psychedelic music. Their lyrics often explore themes of personal transformation and social commentary.",
+            "discography": [
+                {
+                    "title": "Tidal Waves",
+                    "year": 2023,
+                    "type": "album",
+                    "tracks": [
+                        "Ocean's Call",
+                        "Lunar Phase",
+                        "Storm Warning",
+                        "High Tide",
+                        "Moonlit Path"
+                    ]
+                },
+                {
+                    "title": "First Light",
+                    "year": 2021,
+                    "type": "EP",
+                    "tracks": [
+                        "Dawn Breaks",
+                        "Morning Star",
+                        "New Day Rising"
+                    ]
+                }
+            ],
+            "notable_works": [
+                "Ocean's Call (2023)",
+                "Lunar Phase (2023)",
+                "Dawn Breaks (2021)"
+            ],
+            "image_url": "/static/img/artists/sarah_moon.jpg"
+        },
+        {
+            "id": "artist5",
+            "name": "DJ Pulse",
+            "genre": "Hip Hop",
+            "bio": "DJ Pulse, born Marcus Williams, is a hip hop producer and DJ from Atlanta, Georgia. Known for his innovative beats and collaborations with underground rappers, DJ Pulse has become a prominent figure in the independent hip hop scene. His production style blends traditional boom-bap with modern electronic elements.",
+            "discography": [
+                {
+                    "title": "Beat Chronicles",
+                    "year": 2023,
+                    "type": "album",
+                    "tracks": [
+                        "Street Symphony",
+                        "Urban Legends",
+                        "Rhythm & Flow",
+                        "City Beats",
+                        "Pulse Check"
+                    ]
+                },
+                {
+                    "title": "Mixtape Vol. 1",
+                    "year": 2022,
+                    "type": "mixtape",
+                    "tracks": [
+                        "Intro",
+                        "The Block",
+                        "Night Moves",
+                        "City Lights"
+                    ]
+                }
+            ],
+            "notable_works": [
+                "Street Symphony (2023)",
+                "Urban Legends (2023)",
+                "The Block (2022)"
+            ],
+            "image_url": "/static/img/artists/dj_pulse.jpg"
+        }
+    ]
+} 

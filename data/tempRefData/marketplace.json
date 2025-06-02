@@ -1,0 +1,180 @@
+{
+    "categories": [
+        {
+            "id": 1,
+            "name": "Music",
+            "slug": "music",
+            "description": "Physical and digital music items",
+            "subcategories": [
+                {
+                    "id": 101,
+                    "name": "Vinyl Records",
+                    "slug": "vinyl-records",
+                    "description": "New and used vinyl records"
+                },
+                {
+                    "id": 102,
+                    "name": "Digital Albums",
+                    "slug": "digital-albums",
+                    "description": "Digital album downloads"
+                },
+                {
+                    "id": 103,
+                    "name": "Merchandise",
+                    "slug": "merch",
+                    "description": "Band merchandise and apparel"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Events",
+            "slug": "events",
+            "description": "Event tickets and experiences",
+            "subcategories": [
+                {
+                    "id": 201,
+                    "name": "Concert Tickets",
+                    "slug": "concert-tickets",
+                    "description": "Live music event tickets"
+                },
+                {
+                    "id": 202,
+                    "name": "Poetry Events",
+                    "slug": "poetry-events",
+                    "description": "Poetry readings and performances"
+                },
+                {
+                    "id": 203,
+                    "name": "Workshops",
+                    "slug": "workshops",
+                    "description": "Creative workshops and classes"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Art",
+            "slug": "art",
+            "description": "Original artwork and prints",
+            "subcategories": [
+                {
+                    "id": 301,
+                    "name": "Original Art",
+                    "slug": "original-art",
+                    "description": "One-of-a-kind artwork"
+                },
+                {
+                    "id": 302,
+                    "name": "Prints",
+                    "slug": "prints",
+                    "description": "Art prints and reproductions"
+                },
+                {
+                    "id": 303,
+                    "name": "Photography",
+                    "slug": "photography",
+                    "description": "Fine art photography"
+                }
+            ]
+        }
+    ],
+    "products": [
+        {
+            "id": 1001,
+            "category_id": 1,
+            "subcategory_id": 101,
+            "name": "Limited Edition Vinyl",
+            "slug": "limited-edition-vinyl",
+            "description": "Special release vinyl with exclusive artwork",
+            "price": 29.99,
+            "images": ["vinyl1.jpg"],
+            "stock": 50,
+            "featured": true
+        },
+        {
+            "id": 1002,
+            "category_id": 2,
+            "subcategory_id": 201,
+            "name": "Poetry Night Ticket",
+            "slug": "poetry-night-ticket",
+            "description": "Admission to monthly poetry night at Koffee",
+            "price": 10.00,
+            "images": ["poetry-event.jpg"],
+            "stock": 100,
+            "featured": true
+        },
+        {
+            "id": 1003,
+            "category_id": 1,
+            "subcategory_id": 103,
+            "name": "Ahoy Logo T-Shirt",
+            "slug": "ahoy-logo-tshirt",
+            "description": "Classic black t-shirt with the Ahoy Indie Media logo",
+            "price": 25.00,
+            "images": ["tshirt1.jpg"],
+            "stock": 75,
+            "featured": true
+        },
+        {
+            "id": 1004,
+            "category_id": 3,
+            "subcategory_id": 302,
+            "name": "New Haven Music Scene Print",
+            "slug": "new-haven-music-print",
+            "description": "Limited edition art print celebrating New Haven's vibrant music scene",
+            "price": 45.00,
+            "images": ["art-print1.jpg"],
+            "stock": 25,
+            "featured": true
+        },
+        {
+            "id": 1005,
+            "category_id": 2,
+            "subcategory_id": 203,
+            "name": "Songwriting Workshop",
+            "slug": "songwriting-workshop",
+            "description": "3-hour workshop on songwriting fundamentals with local artists",
+            "price": 75.00,
+            "images": ["workshop1.jpg"],
+            "stock": 15,
+            "featured": false
+        },
+        {
+            "id": 1006,
+            "category_id": 1,
+            "subcategory_id": 102,
+            "name": "Local Artists Compilation",
+            "slug": "local-artists-compilation",
+            "description": "Digital compilation album featuring New Haven's best indie artists",
+            "price": 12.99,
+            "images": ["digital-album1.jpg"],
+            "stock": 999,
+            "featured": true
+        },
+        {
+            "id": 1007,
+            "category_id": 3,
+            "subcategory_id": 303,
+            "name": "Concert Photography Print",
+            "slug": "concert-photo-print",
+            "description": "Professional photograph from recent local concerts",
+            "price": 35.00,
+            "images": ["photo1.jpg"],
+            "stock": 20,
+            "featured": false
+        },
+        {
+            "id": 1008,
+            "category_id": 1,
+            "subcategory_id": 103,
+            "name": "Ahoy Tote Bag",
+            "slug": "ahoy-tote-bag",
+            "description": "Canvas tote bag with Ahoy Indie Media design",
+            "price": 18.99,
+            "images": ["tote1.jpg"],
+            "stock": 50,
+            "featured": false
+        }
+    ]
+} 

@@ -1,0 +1,273 @@
+{
+    "categories": [
+        { "id": "podcast", "label": "Podcast" },
+        { "id": "music", "label": "Music" },
+        { "id": "event", "label": "Event" },
+        { "id": "update", "label": "Update" },
+        { "id": "media", "label": "Media" }
+    ],
+    "newsletters": [
+        {
+            "id": "1",
+            "title": "The Rob Show #42 - Michelle Caserta",
+            "date": "2025-05-12",
+            "content": "Michelle Caserta, Rob's former teacher and mentor, joins the show to discuss her career and life.",
+            "categoryId": "podcast",
+            "tags": ["rob show", "michelle caserta"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-podcast-collection/The%20Rob%20Show%20-%20Ep%2042.png",
+            "active": true,
+            "goTo": "podcast-tab"
+        },
+        {
+            "id": "2",
+            "title": "New Song : 'Electro' by Corla Reefer",
+            "date": "2024-02-12",
+            "content": "Ready for the release of a song titled 'Electro' by Corla Reefer, marking our 23rd song out of our target launch goal of 1000. Thank you for your continued support along this musical journey.",
+            "categoryId": "music",
+            "tags": ["corla reefer", "electro", "song release"],
+            "imageUrl": "https://bandlabimages.azureedge.net/v1.0/users/11a502cc-97ef-45bd-83f0-272b4b2abd79/260x260"
+        },
+        {
+            "id": "3",
+            "title": "New Rob Show",
+            "date": "2024-02-15",
+            "content": "Rob Show #18 | My Own Grenade",
+            "categoryId": "podcast",
+            "tags": ["rob show", "my own grenade"],
+            "imageUrl": "https://ahoypodcast.s3.us-east-2.amazonaws.com/The+Rob+Show+-+Ep18+-+My+Own+Grendade.jpg"
+        },
+        {
+            "id": "4",
+            "title": "New Music : My Own Grenade",
+            "date": "2024-02-20",
+            "content": "Last week we had My Own Grenade on the Rob Show and fell in love with these folks - they have generously given Ahoy permission to stream their work! We added 6 to the Mix. For more of My Own Grenade - here is a brief about them: My Own Grenade is a Connecticut based hard rock/punk band. Founded in 1996, Tim Rooney (vocals), Mike Reid (guitar/vocals), Mike Testa (guitar), Chris Siano (bass), and Buddy Oberheim (drums) are dedicated to writing, recording, and performing original songs.",
+            "categoryId": "music",
+            "tags": ["my own grenade", "music", "punk"],
+            "imageUrl": "https://ahoycollection.s3.us-east-2.amazonaws.com/my+own+grenade.jpeg"
+        },
+        {
+            "id": "5",
+            "title": "New Music : S.G Carlson",
+            "date": "2024-03-04",
+            "content": "Check out the latest track 'How I Got Fat While Living Skinny' by S.G. Carlson.",
+            "categoryId": "music",
+            "tags": ["s.g carlson", "music", "new track"],
+            "imageUrl": "https://ahoycollection.s3.us-east-2.amazonaws.com/SGCarlson-AhoyIndieMedia.png",
+            "songLink": {
+                "id": 30,
+                "playButton": true,
+                "mp3url": "https://ahoycollection.s3.us-east-2.amazonaws.com/S.G.+Carlson+-+How+I+Got+Fat+While+Living+Skinny.mp3",
+                "backgroundImageUrl": "https://ahoycollection.s3.us-east-2.amazonaws.com/SGCarlson-AhoyIndieMedia.png"
+            }
+        },
+        {
+            "id": "6",
+            "title": "The Rob Show - Ep 19 - Paul Wildy",
+            "date": "2024-03-08",
+            "content": "Paul Wildy, a 20+ year cab driver in New Haven, shares his experiences from working on the Carter campaign to witnessing the city's evolution over decades.",
+            "categoryId": "podcast",
+            "tags": ["rob show", "paul wildy"],
+            "imageUrl": "https://ahoypodcast.s3.us-east-2.amazonaws.com/The+Rob+Show+-+Ep19+-+Paul+Wildy.jpg",
+            "mp3Url": "https://ahoypodcast.s3.us-east-2.amazonaws.com/readyThe+Rob+Show+-+Ep+19+-+Paul+Wildly.mp3"
+        },
+        {
+            "id": "7",
+            "title": "The Rob Show - Ep 20 - Pat Clendenen",
+            "date": "2024-03-19",
+            "content": "Pat Clendenen, originally from New Haven, returns after 25 years in Boston. A local lawyer and power lifter, Pat is also venturing into skateboarding.",
+            "categoryId": "podcast",
+            "tags": ["rob show", "pat clendenen"],
+            "imageUrl": "https://ahoypodcast.s3.us-east-2.amazonaws.com/The+Rob+Show+-+Ep20+-+Pat+Clendenen.jpg",
+            "mp3Url": "https://ahoypodcast.s3.us-east-2.amazonaws.com/SUPERreadyThe+Rob+Show+-+Ep+20+-+Pat+Clendenen.mp3"
+        },
+        {
+            "id": "8",
+            "title": "New Justin Arena Songs Added",
+            "date": "2024-03-20",
+            "content": "Dive into Justin Arena and enjoy some fresh tunes - We've added 3 new songs to the collection - 'Framework', 'Fruit In The Shower', and 'No 1'.",
+            "categoryId": "music",
+            "tags": ["justin arena", "music", "new songs"],
+            "imageUrl": "https://f4.bcbits.com/img/a3851680380_16.jpg",
+            "mp3Url": "https://ahoycollection.s3.us-east-2.amazonaws.com/Justin+Arena+-+Framework.mp3"
+        },
+        {
+            "id": "9",
+            "title": "New Song: 'Moon Views, Know by Feel, Chokecherries' by The Tines",
+            "date": "2024-04-04",
+            "content": "Introducing a new addition to our music collection - 'Moon Views, Know by Feel, Chokecherries' by The Tines.",
+            "categoryId": "music",
+            "tags": ["the tines", "music", "new song"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-song-collection/ready_theTinesAlbumArtwork.jpg"
+        },
+        {
+            "id": "10",
+            "title": "New Rob Show: 'Dave Gunn",
+            "date": "2024-04-05",
+            "content": "CoFounder of the Tallboyz - Born in Hamden - Pro Rollerblader - Former Hockey Player - Alum of the Rob Show",
+            "categoryId": "podcast",
+            "tags": ["rob show", "dave gunn"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-podcast-collection/readyThe%20Rob%20Show%20-%20Ep23%20-%20Dave%20Gunn%20-%204.4.24.jpg"
+        },
+        {
+            "id": "11",
+            "title": "The Rob Show #24 - Ellen Martin",
+            "date": "2024-04-15",
+            "content": "Ellen Martin - neuroscientist from the UK, finally makes it on the Rob show!",
+            "categoryId": "podcast",
+            "tags": ["rob show", "ellen martin"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-podcast-collection/The%20Rob%20Show%20-%20Ep24%20-%20Ellen%20Martin.jpg",
+            "mp3Url": "https://storage.googleapis.com/ahoy-podcast-collection/ready%2BThe%20Rob%20Show%20-%20Ep%2024%20-%20Ellen%20Martin.mp3"
+        },
+        {
+            "id": "12",
+            "title": "The Rob Show #26 - Dan Carbonella",
+            "date": "2024-04-30",
+            "content": "Dan Carbonella - manager of Koffee? joins the Rob Show - finally",
+            "categoryId": "podcast",
+            "tags": ["rob show", "dan carbonella"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-podcast-collection/The%20Rob%20Show%20-%20Ep26%20-%20Dan%20Carbonella%20-%204.26.24.jpg",
+            "mp3Url": "https://storage.googleapis.com/ahoy-podcast-collection/readyRobShow_Dan_ep26.mp3"
+        },
+        {
+            "id": "13",
+            "title": "The Rob Show #28 - Alex Gonzalez",
+            "date": "2024-05-10",
+            "content": "Alex Gonzalez - founder of Ahoy - joins the Rob Show",
+            "categoryId": "podcast",
+            "tags": ["rob show", "alex gonzalez"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-podcast-collection/The%20Rob%20Show%20-%20Ep28%20-%20Alex%20Gonzalez%20-%205.10.24.jpg",
+            "mp3Url": "https://storage.googleapis.com/ahoy-podcast-collection/ready_The%20Rob%20Show%20-%20Ep28%20-%20Alex%20Gonzalez.mp3"
+        },
+        {
+            "id": "14",
+            "title": "The Rob Show #29 - Andrew Leverton",
+            "date": "2024-05-23",
+            "content": "Andrew Leverton - co-captain of the Tallboyz - returns to the Rob Show",
+            "categoryId": "podcast",
+            "tags": ["rob show", "andrew leverton"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-podcast-collection/Rob%20Show%20-%20Ep29%20-%20Andrew%20Leverton%20-%205.17.24.jpg",
+            "mp3Url": "https://storage.googleapis.com/ahoy-podcast-collection/readyRobShow_Andrew_ep29.mp3"
+        },
+        {
+            "id": "15",
+            "title": "New Clips Added",
+            "date": "2024-05-25",
+            "content": "Dove deep into the archives and added some forgotten gems including when Alex Gonzalez made the news, a Rob Meglio fitness instructional video, and a remastered Samuel Dylan Witch Music Video",
+            "categoryId": "media",
+            "tags": ["media", "forgotten gems"],
+            "imageUrl": "https://cdn.jwplayer.com/thumbs/l2o4EqgV-640.jpg",
+            "mp3Url": "#"
+        },
+        {
+            "id": "16",
+            "title": "Added Folk Punk Dad - Live Performance to the Media Mix",
+            "date": "2024-05-26",
+            "content": "Added the New Haven's Own - Folk Punk Dad - live performance to the media mix",
+            "categoryId": "media",
+            "tags": ["media", "live performance"],
+            "imageUrl": "https://cdn.jwplayer.com/v2/media/IdqbXxlv/poster.jpg?width=720",
+            "mp3Url": "#"
+        },
+        {
+            "id": "17",
+            "title": "Added a Music Video by Clones of Clarence - directed by Alex Gonzalez to the media mix",
+            "date": "2024-05-26",
+            "content": "Added a Music Video by Clones of Clarence - directed by Alex Gonzalez to the media mix",
+            "categoryId": "media",
+            "tags": ["media", "music video"],
+            "imageUrl": "https://cdn.jwplayer.com/v2/media/S4VUFsmU/poster.jpg?width=720",
+            "mp3Url": "#"
+        },
+        {
+            "id": "18",
+            "title": "The 2nd Annual Pig Roast drops July 6th",
+            "date": "2024-06-25",
+            "content": "We base all Ahoy operations out of South Eastern New England - if you're in 100 mile radius and are a fan of ahoy come and enjoy some authentic cuban pig!",
+            "categoryId": "event",
+            "tags": ["event", "pig roast"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-dynamic-content/ahoyPig.png",
+            "mp3Url": "#"
+        },
+        {
+            "id": "19",
+            "title": "2 New Rob Shows Back to Back",
+            "date": "2024-06-26",
+            "content": "Oy oy - the Rob Show is alive and well and back with two new episodes back to back - these were the episodes Rob recorded when Alex was away in Singapore.",
+            "categoryId": "podcast",
+            "tags": ["rob show", "two new episodes"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-dynamic-content/Rob%20Show%202%20News.jpg",
+            "mp3Url": "#"
+        },
+        {
+            "id": "20",
+            "title": "Obsolete Full Length Skate Film Out Now",
+            "date": "2024-07-24",
+            "content": "The Tallboyz 5th full length skate film is out now - watch it on YouTube. Featured Skaters: Dave Gunn, Tadd Labozzetta, Josh Weaver, Ian Hutchinson, Nigel Klein, Julian Hinsch, Dave Hartnett, Mark Wojda, Don Sanders, Nick Chongo Sellen, Jay Kouch, Tyler Knight, Brad, Alec Gerhart, Matt Ragone, Brendan Brown, Eric Larson, Rob Dargiewicz, Chapi, Nick Tomanelli, Olivier De Tomas, Marcello Savona, Leon Toppin, Chuck Winfield, Aaron Kalat, Connor Murphy, Jeremy Raff, Bella Sadik, Jay O'Neill & Ed Braxton.",
+            "categoryId": "media",
+            "tags": ["media", "skate film"],
+            "featuredVideo": "dKiWH9zw",
+            "featuredVideoIframe": "https://cdn.jwplayer.com/players/dKiWH9zw-9Gtk2B1J.html"
+        },
+        {
+            "id": "21",
+            "title": "Jake Custer - New Music Added",
+            "date": "2024-08-20",
+            "content": "Added 5 new songs by Jake Custer to the media mix",
+            "categoryId": "music",
+            "tags": ["music", "jake custer"],
+            "imageUrl": "https://storage.googleapis.com/ahoy-song-collection/ahoy_jake-custer.jpg",
+            "mp3Url": "#",
+            "goTo": "#",
+            "active": true
+        },
+        {
+            "id": "22",
+            "title": "'Alive on Central' Episodes 2-5 Now Streaming",
+            "date": "2024-08-22",
+            "content": "Added 4 episodes of Alive on Central to the media mix. Shoutout to Jack Galvin out in Newport. He's organizing another film festival this September 9 Central Film Festival If you're in the area, check it out!",
+            "categoryId": "media",
+            "tags": ["media", "alive on central"],
+            "active": true,
+            "goTo": "media-tab",
+            "imageUrl": "https://cdn.jwplayer.com/v2/media/omiMcvN8/poster.jpg?width=720",
+            "externalLink": "https://www.newportthisweek.com/articles/9-central-film-festival-returns-sept-9/"
+        },
+        {
+            "id": "23",
+            "title": "9 Central Film Festival Festival Shoutout",
+            "date": "2024-08-22",
+            "content": "9 Central Film Festival If you're in the area, check it out! Stay tuned for more Newport",
+            "categoryId": "event",
+            "tags": ["event", "9 central film festival"],
+            "active": false,
+            "goTo": "media-tab",
+            "imageUrl": "https://cdn.jwplayer.com/v2/media/VqtV35od/poster.jpg?width=720",
+            "additionalImages": [
+                "https://www.newportthisweek.com/wp-content/uploads/images/2023-08-31/25p1.jpg",
+                "https://www.newportthisweek.com/wp-content/uploads/images/2023-08-31/25p2.jpg"
+            ],
+            "externalLink": "https://www.newportthisweek.com/articles/9-central-film-festival-returns-sept-9/"
+        },
+        {
+            "id": "24",
+            "title": "Emerging from Construction: Exciting Updates Ahead",
+            "date": "2024-09-03",
+            "content": "Not sure if you noticed but we've been adding new features to the app left and right - spent the summer in construction mode - but we're almost out - and we're excited to share some new features with you soon - poke around - and enjoy.",
+            "categoryId": "update",
+            "tags": ["update", "construction"],
+            "active": true,
+            "goTo": "updates-tab",
+            "imageUrl": "https://storage.googleapis.com/ahoy-dynamic-content/news/ahoy-construction.jpg"
+        },
+        {
+            "id": "25",
+            "title": "The Rob Show Returns: New Episodes Every Thursday at 4pm!",
+            "date": "2024-09-16",
+            "content": "Ahoy, listeners! The Rob Show is back with a bang for a new season! We're happy to announce our commitment to bringing you fresh episodes every Thursday at 4pm, in time to energize that final stretch of the workweek. So gather 'round the water cooler, buckle up with a beevy, and join us every week weekly dose of inspiration and insight from the one and only Rob. The Rob Show is here to make your Thursdays the highlight of your work week!",
+            "categoryId": "podcast",
+            "tags": ["podcast", "rob show"],
+            "active": true,
+            "goTo": "podcast-tab"
+        }
+    ]
+} 

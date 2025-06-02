@@ -1,0 +1,124 @@
+{
+    "channels": [
+        {
+            "id": "episodes",
+            "name": "Ahoy Episodes",
+            "description": "Original series and episodes",
+            "currentShow": "Alive on Central",
+            "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bepisode%5D%5BAlive%20on%20Central%5D%5BEpisode%202%5D.png",
+            "content": [
+                {
+                    "id": 17,
+                    "title": "Alive on Central - Episode 2",
+                    "src": "https://storage.googleapis.com/ahoy-videos/episodes/%5Bepisodes%5D%5BAlive%20on%20Central%5D%5Bepisode%202%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bepisode%5D%5BAlive%20on%20Central%5D%5BEpisode%202%5D.png"
+                },
+                {
+                    "id": 18,
+                    "title": "Alive on Central - Episode 3",
+                    "src": "https://storage.googleapis.com/ahoy-videos/episodes/%5Bepisodes%5D%5BAlive%20on%20Central%5D%5Bepisode%203%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bepisode%5D%5BAlive%20on%20Central%5D%5BEpisode%203%5D.png"
+                },
+                {
+                    "id": 19,
+                    "title": "Alive on Central - Episode 4",
+                    "src": "https://storage.googleapis.com/ahoy-videos/episodes/%5Bepisodes%5D%5BAlive%20on%20Central%5D%5Bepisode%204%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bepisode%5D%5BAlive%20on%20Central%5D%5BEpisode%204%5D.png"
+                },
+                {
+                    "id": 20,
+                    "title": "Alive on Central - Episode 5",
+                    "src": "https://storage.googleapis.com/ahoy-videos/episodes/%5Bepisodes%5D%5BAlive%20on%20Central%5D%5Bepisode%205%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bepisode%5D%5BAlive%20on%20Central%5D%5BEpisode%205%5D.png"
+                }
+            ]
+        },
+        {
+            "id": "clips",
+            "name": "Ahoy Clips",
+            "description": "Featured clips and parts",
+            "currentShow": "Tallboyz Collection",
+            "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bclips%5D%5BAlways%20Next%20Time%5D%5BDave%20Gunn%5D.jpg",
+            "content": [
+                {
+                    "id": 1,
+                    "title": "Dave Gunn - NoMusic",
+                    "src": "https://storage.googleapis.com/ahoy-videos/clips/%5Btallboyz%5D-%5Bclip%5D-%5Bdavegunn%5D-%5BnoMusic%5D-%5B001%5D.MOV",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bclips%5D%5BquietGunn%5D.jpg"
+                },
+                {
+                    "id": 2,
+                    "title": "Alex Figueroa - The Gnarth",
+                    "src": "https://storage.googleapis.com/ahoy-videos/clips/%5Bfig%5D-%5Bclips%5D-%5BThe%20Gnarth%20Full%20Part-%20Fig%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bclips%5D%5Bfig-theGnarth%5D.jpg"
+                },
+                {
+                    "id": 3,
+                    "title": "Andrew Leverton - Formaility",
+                    "src": "https://storage.googleapis.com/ahoy-videos/clips/%5Btallboyz%5D-%5Bparts%5D-%5BandrewLeverton%20-%20Formaility%5D%20.mov",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bfullpart%5D%5BAndrewLeverton%5D%5BFormatility%5D.jpg"
+                }
+            ]
+        },
+        {
+            "id": "music",
+            "name": "Ahoy Music",
+            "description": "Music videos and performances",
+            "currentShow": "Featured Artists",
+            "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5BmusicVideo%5D%5BSamuel%20Dylan%20Witch%5D%5BWeary%20Chest%5D.jpg",
+            "content": [
+                {
+                    "id": 13,
+                    "title": "Samuel Dylan Witch - Weary Chest",
+                    "src": "https://storage.googleapis.com/ahoy-videos/music-videos/%5BMusicVideo%5D%5BSamuel%20Dylan%20Witch%5D%5BWeary%20Chest%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5BmusicVideo%5D%5BSamuel%20Dylan%20Witch%5D%5BWeary%20Chest%5D.jpg"
+                },
+                {
+                    "id": 14,
+                    "title": "Justin Arena - When You Wake Up",
+                    "src": "https://storage.googleapis.com/ahoy-videos/music-videos/%5BMusicVideo%5D-%5BJustin%20Arena%5D-%5BWhen%20you%20Wake%20Up%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5BmusicVideo%5D%5BJustin%20Arena%5D%5BWhen%20You%20Wake%20Up%5D.jpg"
+                },
+                {
+                    "id": 24,
+                    "title": "Justin Arena - Space Cadet",
+                    "src": "https://storage.googleapis.com/ahoy-videos/music-videos/%5BmusicVideos%5D%5BJustin%20Arena%5D%5BSpace%20Cadet%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bmusic%20video%5D%5BJustinArena%5D%5BSpace%20Cadet%5D.jpg"
+                }
+            ]
+        },
+        {
+            "id": "shorts",
+            "name": "Ahoy Shorts",
+            "description": "Short films and trailers",
+            "currentShow": "Featured Shorts",
+            "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bshort%20film%5D%5Bpal-bot%5D.jpg",
+            "content": [
+                {
+                    "id": 25,
+                    "title": "Pal-Bot",
+                    "src": "https://storage.googleapis.com/ahoy-videos/short-films/%5BshortFilm%5D%5Bpal-bot%5D%5BRob%20Meglio%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bshort%20film%5D%5Bpal-bot%5D.jpg"
+                },
+                {
+                    "id": 26,
+                    "title": "Pal-Bot 2 Trailer",
+                    "src": "https://storage.googleapis.com/ahoy-videos/promos/%5Bpromos%5D%5Bpal-bot%202%20trailer%5D.mp4",
+                    "type": "video/mp4",
+                    "thumbnail": "https://storage.googleapis.com/ahoy-videos/thumbnails/%5BahoyThumb%5D%5Bpromo%5D%5Bpal-bot%202%5D%5Btrailer%5D.jpg"
+                }
+            ]
+        }
+    ]
+} 

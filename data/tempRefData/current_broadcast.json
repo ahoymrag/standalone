@@ -1,0 +1,1 @@
+{"time_slot": "6:00 PM - 10:00 PM", "description": "Evening Entertainment - Relaxing content for winding down", "content": [{"type": "music", "title": "Evening Playlist", "mood": "relaxed", "priority": 1}, {"type": "media", "title": "Featured Shows", "priority": 2}, {"type": "podcast", "title": "Evening Podcasts", "priority": 3}]}

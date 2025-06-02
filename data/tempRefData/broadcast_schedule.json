@@ -1,0 +1,90 @@
+{
+    "morning": {
+        "time_slot": "6:00 AM - 12:00 PM",
+        "description": "Morning Mix - Energetic content to start your day",
+        "content": [
+            {
+                "type": "podcast",
+                "title": "The Rob Show - Latest Episode",
+                "priority": 1
+            },
+            {
+                "type": "music",
+                "title": "Morning Playlist",
+                "mood": "energetic",
+                "priority": 2
+            },
+            {
+                "type": "news",
+                "title": "Latest Updates",
+                "priority": 3
+            }
+        ]
+    },
+    "afternoon": {
+        "time_slot": "12:00 PM - 6:00 PM",
+        "description": "Afternoon Programming - Focused content for productivity",
+        "content": [
+            {
+                "type": "music",
+                "title": "Focus Playlist",
+                "mood": "focused",
+                "priority": 1
+            },
+            {
+                "type": "podcast",
+                "title": "Featured Podcasts",
+                "priority": 2
+            },
+            {
+                "type": "media",
+                "title": "Featured Videos",
+                "priority": 3
+            }
+        ]
+    },
+    "evening": {
+        "time_slot": "6:00 PM - 10:00 PM",
+        "description": "Evening Entertainment - Relaxing content for winding down",
+        "content": [
+            {
+                "type": "music",
+                "title": "Evening Playlist",
+                "mood": "relaxed",
+                "priority": 1
+            },
+            {
+                "type": "media",
+                "title": "Featured Shows",
+                "priority": 2
+            },
+            {
+                "type": "podcast",
+                "title": "Evening Podcasts",
+                "priority": 3
+            }
+        ]
+    },
+    "late_night": {
+        "time_slot": "10:00 PM - 6:00 AM",
+        "description": "Late Night - Chill content for night owls",
+        "content": [
+            {
+                "type": "music",
+                "title": "Late Night Playlist",
+                "mood": "chill",
+                "priority": 1
+            },
+            {
+                "type": "media",
+                "title": "Late Night Shows",
+                "priority": 2
+            },
+            {
+                "type": "podcast",
+                "title": "Late Night Podcasts",
+                "priority": 3
+            }
+        ]
+    }
+} 

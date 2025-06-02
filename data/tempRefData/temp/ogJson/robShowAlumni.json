@@ -1,0 +1,41 @@
+{
+  "alumni": [
+
+    {
+      "id": 2,
+      "name": "Dr. Tyler Rice",
+      "description": "Dr. Tyler Rice is a renowned scientist with a passion for sharing knowledge.",
+      "thumbnail": "https://storage.googleapis.com/ahoy-podcast-collection/ROB%20EPISODE%2039%20-%20Dr%20Tyler%20Rice.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Justin Neafsey",
+      "description": "Justin Neafsey is a talented musician and guitarist from Connecticut.",
+      "thumbnail": "https://storage.googleapis.com/ahoy-podcast-collection/ROB%20EPISODE%2038%20-%20Justin%20Neafsey.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Kevin McHahon",
+      "description": "Kevin McHahon is a local musician and songwriter with a unique style.",
+      "thumbnail": "https://storage.googleapis.com/ahoy-podcast-collection/ROB%20EPISODE%2037%20-%20Kevin%20McHaon.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Jack Galvin",
+      "description": "Jack Galvin is a surfer and filmmaker from Newport, Rhode Island.",
+      "thumbnail": "https://storage.googleapis.com/ahoy-podcast-collection/ROB%20EPISODE%2036%20-%20JACK%20GALVIN.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Phil Toran",
+      "description": "Phil Toran, a filmmaker - costar of pal-bot - finally joins his old pal Rob.",
+      "thumbnail": "https://storage.googleapis.com/ahoy-podcast-collection/the%20rob%20show/ROB%20EPISODE%2041%20-%20Phil%20Toran.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Trevon Bennett",
+      "description": "Trevon Bennett, a local musician and songwriter, joins Rob for an engaging conversation in this episode of The Rob Show",
+      "thumbnail": "https://storage.googleapis.com/ahoy-podcast-collection/ROB%20EPISODE%2040%20-%20Trevon%20Bennett.jpg"
+    }
+  ]
+}
