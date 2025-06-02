@@ -2,21 +2,137 @@ import sys
 import os
 import json
 import tempfile
+import numpy as np
+import subprocess
+import uuid
+from datetime import datetime
 from pathlib import Path
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                             QHBoxLayout, QPushButton, QLabel, QListWidget, 
                             QProgressBar, QMessageBox, QStackedWidget, QFrame,
-                            QScrollArea, QSizePolicy)
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QSize
-from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QLinearGradient, QPalette
+                            QScrollArea, QSizePolicy, QSlider, QLineEdit,
+                            QFileDialog, QListWidgetItem)
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QSize, QTimer, QUrl, QPoint, QPointF, QRectF
+from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QLinearGradient, QPalette, QPen, QDesktopServices, QMouseEvent, QKeyEvent
 import pygame
 from google.cloud import storage
 from dotenv import load_dotenv
 import requests
 import threading
+import librosa
+import soundfile as sf
 
 # Initialize pygame mixer
 pygame.mixer.init()
+
+class Surfer:
+    def __init__(self, x, y):
+        self.pos = QPointF(x, y)
+        self.vel = QPointF(0, 0)
+        self.acc = QPointF(0, 0)
+        self.size = 20
+        self.color = QColor("#FFD700")  # Gold color
+        self.rotation = 0
+        self.keys_pressed = set()
+        self.max_speed = 5
+        self.trail = []  # Store recent positions for trail effect
+        self.max_trail_length = 10
+
+    def update(self, width, height):
+        # Reset acceleration
+        self.acc = QPointF(0, 0)
+        
+        # Apply forces based on keys
+        if 'W' in self.keys_pressed:
+            self.acc += QPointF(0, -0.2)
+        if 'S' in self.keys_pressed:
+            self.acc += QPointF(0, 0.2)
+        if 'A' in self.keys_pressed:
+            self.acc += QPointF(-0.2, 0)
+            self.rotation = -30
+        if 'D' in self.keys_pressed:
+            self.acc += QPointF(0.2, 0)
+            self.rotation = 30
+        
+        # Update velocity and position
+        self.vel += self.acc
+        self.vel = self.vel * 0.95  # Damping
+        self.pos += self.vel
+        
+        # Keep surfer within bounds
+        self.pos.setX(max(self.size, min(width - self.size, self.pos.x())))
+        self.pos.setY(max(self.size, min(height - self.size, self.pos.y())))
+        
+        # Update trail
+        self.trail.append(QPointF(self.pos))
+        if len(self.trail) > self.max_trail_length:
+            self.trail.pop(0)
+        
+        # Reset rotation if no A/D keys
+        if 'A' not in self.keys_pressed and 'D' not in self.keys_pressed:
+            self.rotation = 0
+
+    def draw(self, painter):
+        # Draw trail
+        for i, pos in enumerate(self.trail):
+            alpha = int(255 * (i / len(self.trail)))
+            trail_color = QColor(self.color)
+            trail_color.setAlpha(alpha)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(trail_color)
+            size = self.size * (i / len(self.trail))
+            painter.drawEllipse(pos, size, size)
+
+        # Draw surfer
+        painter.save()
+        painter.translate(self.pos)
+        painter.rotate(self.rotation)
+        
+        # Draw body
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(self.color)
+        painter.drawEllipse(QRectF(-self.size/2, -self.size/2, self.size, self.size))
+        
+        # Draw face
+        painter.setBrush(QColor("#000000"))
+        painter.drawEllipse(QRectF(-self.size/4, -self.size/4, self.size/2, self.size/2))
+        
+        painter.restore()
+
+class Particle:
+    def __init__(self, x, y):
+        self.pos = QPointF(x, y)
+        self.vel = QPointF(0, 0)
+        self.acc = QPointF(0, 0)
+        self.size = np.random.uniform(2, 5)
+        self.color = QColor("#e94560")
+        self.color.setAlpha(150)
+        self.max_speed = 5
+        self.audio_force = 0
+
+    def apply_force(self, force):
+        self.acc += force
+
+    def update(self):
+        self.vel += self.acc
+        self.vel = self.vel * 0.95  # Damping
+        self.pos += self.vel
+        self.acc *= 0
+        self.audio_force *= 0.95  # Decay audio force
+
+    def edges(self, width, height):
+        if self.pos.x() < 0:
+            self.pos.setX(0)
+            self.vel.setX(-self.vel.x() * 0.8)
+        elif self.pos.x() > width:
+            self.pos.setX(width)
+            self.vel.setX(-self.vel.x() * 0.8)
+        if self.pos.y() < 0:
+            self.pos.setY(0)
+            self.vel.setY(-self.vel.y() * 0.8)
+        elif self.pos.y() > height:
+            self.pos.setY(height)
+            self.vel.setY(-self.vel.y() * 0.8)
 
 class GlassFrame(QFrame):
     def __init__(self, parent=None):
@@ -79,11 +195,272 @@ class MusicDownloader(QThread):
         except Exception as e:
             self.error.emit(str(e))
 
+class VisualizationWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setMinimumHeight(200)
+        self.particles = []
+        self.mouse_pos = QPointF(0, 0)
+        self.mouse_pressed = False
+        self.spectrum = np.zeros(50)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_visualization)
+        self.timer.start(16)  # ~60 FPS for smooth animation
+        
+        # Initialize particles and surfer
+        self.init_particles()
+        self.surfer = Surfer(self.width()/2, self.height()/2)
+        
+        # Enable key tracking
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+    def init_particles(self):
+        self.particles = []
+        for _ in range(100):
+            x = np.random.uniform(0, self.width())
+            y = np.random.uniform(0, self.height())
+            self.particles.append(Particle(x, y))
+
+    def keyPressEvent(self, event: QKeyEvent):
+        key = event.text().upper()
+        if key in ['W', 'A', 'S', 'D']:
+            self.surfer.keys_pressed.add(key)
+            self.update()
+
+    def keyReleaseEvent(self, event: QKeyEvent):
+        key = event.text().upper()
+        if key in ['W', 'A', 'S', 'D']:
+            self.surfer.keys_pressed.discard(key)
+            self.update()
+
+    def mousePressEvent(self, event: QMouseEvent):
+        self.mouse_pressed = True
+        self.mouse_pos = QPointF(event.position())
+
+    def mouseReleaseEvent(self, event: QMouseEvent):
+        self.mouse_pressed = False
+
+    def mouseMoveEvent(self, event: QMouseEvent):
+        self.mouse_pos = QPointF(event.position())
+
+    def update_visualization(self):
+        if pygame.mixer.music.get_busy():
+            try:
+                array = pygame.mixer.Sound.get_raw()
+                if array:
+                    spectrum = np.abs(np.fft.rfft(array))
+                    spectrum = spectrum / np.max(spectrum)
+                    self.spectrum = np.interp(np.linspace(0, len(spectrum), 50),
+                                            np.arange(len(spectrum)), spectrum)
+            except:
+                pass
+
+        # Update surfer
+        self.surfer.update(self.width(), self.height())
+
+        # Update particles
+        for particle in self.particles:
+            # Apply audio force
+            if pygame.mixer.music.get_busy():
+                idx = int((particle.pos.x() / self.width()) * len(self.spectrum))
+                idx = min(max(idx, 0), len(self.spectrum) - 1)
+                force = self.spectrum[idx] * 0.5
+                particle.audio_force = force
+                particle.apply_force(QPointF(0, -force * 2))  # Push up with audio
+
+            # Apply mouse force
+            if self.mouse_pressed:
+                mouse_force = QPointF(self.mouse_pos - particle.pos)
+                distance = mouse_force.manhattanLength()
+                if distance < 100:
+                    strength = (1 - distance/100) * 0.5
+                    mouse_force = mouse_force * strength
+                    particle.apply_force(mouse_force)
+
+            # Apply surfing effect
+            wave_force = QPointF(
+                np.sin(particle.pos.y() * 0.02 + self.timer.interval() * 0.001) * 0.1,
+                np.cos(particle.pos.x() * 0.02 + self.timer.interval() * 0.001) * 0.1
+            )
+            particle.apply_force(wave_force)
+
+            # Apply surfer force to nearby particles
+            surfer_force = QPointF(self.surfer.pos - particle.pos)
+            distance = surfer_force.manhattanLength()
+            if distance < 50:
+                strength = (1 - distance/50) * 0.3
+                surfer_force = surfer_force * strength
+                particle.apply_force(surfer_force)
+
+            particle.update()
+            particle.edges(self.width(), self.height())
+
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        # Draw background with gradient
+        gradient = QLinearGradient(0, 0, 0, self.height())
+        gradient.setColorAt(0, QColor(26, 26, 46, 100))
+        gradient.setColorAt(1, QColor(22, 33, 62, 100))
+        painter.fillRect(self.rect(), gradient)
+
+        # Draw particles
+        for particle in self.particles:
+            # Draw glow
+            glow_color = QColor(particle.color)
+            glow_color.setAlpha(50)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(glow_color)
+            painter.drawEllipse(particle.pos, particle.size * 2, particle.size * 2)
+
+            # Draw particle
+            painter.setBrush(particle.color)
+            painter.drawEllipse(particle.pos, particle.size, particle.size)
+
+        # Draw surfer
+        self.surfer.draw(painter)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if not self.particles:  # Only initialize if particles don't exist
+            self.init_particles()
+            self.surfer = Surfer(self.width()/2, self.height()/2)
+
+class TimeSlider(QSlider):
+    def __init__(self, parent=None):
+        super().__init__(Qt.Orientation.Horizontal, parent)
+        self.setStyleSheet("""
+            QSlider::groove:horizontal {
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                height: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                margin: 2px 0;
+                border-radius: 4px;
+            }
+            QSlider::handle:horizontal {
+                background: #e94560;
+                border: none;
+                width: 16px;
+                margin: -4px 0;
+                border-radius: 8px;
+            }
+            QSlider::sub-page:horizontal {
+                background: #e94560;
+                border-radius: 4px;
+            }
+        """)
+        self.setTracking(True)
+
+class VolumeSlider(QSlider):
+    def __init__(self, parent=None):
+        super().__init__(Qt.Orientation.Horizontal, parent)
+        self.setMaximum(100)
+        self.setValue(100)
+        self.setStyleSheet("""
+            QSlider::groove:horizontal {
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                height: 4px;
+                background: rgba(255, 255, 255, 0.1);
+                margin: 2px 0;
+                border-radius: 2px;
+            }
+            QSlider::handle:horizontal {
+                background: #e94560;
+                border: none;
+                width: 12px;
+                margin: -4px 0;
+                border-radius: 6px;
+            }
+            QSlider::sub-page:horizontal {
+                background: #e94560;
+                border-radius: 2px;
+            }
+        """)
+        self.setTracking(True)
+
+class DownloadsPage(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setup_ui()
+
+    def setup_ui(self):
+        layout = QVBoxLayout(self)
+        
+        # Header
+        header = QLabel("Your Downloads")
+        header.setStyleSheet("font-size: 24px; font-weight: bold; color: white;")
+        layout.addWidget(header)
+        
+        # Buttons layout
+        buttons_layout = QHBoxLayout()
+        
+        # Open folder button
+        open_folder_btn = GlassButton("Open Downloads Folder")
+        open_folder_btn.clicked.connect(self.open_downloads_folder)
+        buttons_layout.addWidget(open_folder_btn)
+        
+        # New batch button
+        new_batch_btn = GlassButton("Start New Batch")
+        new_batch_btn.clicked.connect(self.start_new_batch)
+        buttons_layout.addWidget(new_batch_btn)
+        
+        layout.addLayout(buttons_layout)
+        
+        # Downloads list
+        self.downloads_list = QListWidget()
+        self.downloads_list.setStyleSheet("""
+            QListWidget {
+                background-color: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 5px;
+                color: white;
+            }
+            QListWidget::item {
+                padding: 8px;
+            }
+            QListWidget::item:selected {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        """)
+        layout.addWidget(self.downloads_list)
+        
+        self.refresh_downloads_list()
+
+    def refresh_downloads_list(self):
+        self.downloads_list.clear()
+        downloads_dir = Path("downloads")
+        if downloads_dir.exists():
+            for file in downloads_dir.glob("*.mp3"):
+                # Extract batch ID from filename
+                batch_id = file.stem.split('_')[-1]
+                item = QListWidgetItem(f"{file.stem} [Batch: {batch_id}]")
+                item.setData(Qt.ItemDataRole.UserRole, str(file))
+                self.downloads_list.addItem(item)
+
+    def start_new_batch(self):
+        self.parent().start_new_batch()
+        QMessageBox.information(self, "New Batch Started", 
+                              f"New download batch started with ID: {self.parent().current_batch_id}")
+
+    def open_downloads_folder(self):
+        downloads_path = Path("downloads").absolute()
+        if downloads_path.exists():
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(downloads_path)))
+        else:
+            QMessageBox.warning(self, "Warning", "Downloads folder not found!")
+
 class AhoyIndieMedia(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Ahoy Indie Media")
         self.setMinimumSize(1200, 800)
+        
+        # Initialize batch tracking
+        self.current_batch_id = str(uuid.uuid4())[:8]  # Generate a unique 8-character batch ID
+        self.batch_start_time = datetime.now()
         
         # Set window icon
         self.setWindowIcon(QIcon(self.create_favicon()))
@@ -105,6 +482,11 @@ class AhoyIndieMedia(QMainWindow):
         self.downloaded_tracks = set()
         self.temp_files = []
         self.load_downloaded_tracks()
+
+        # Initialize playback timer
+        self.playback_timer = QTimer()
+        self.playback_timer.timeout.connect(self.update_playback_position)
+        self.playback_timer.start(1000)  # Update every second
 
         # Set window background
         self.setStyleSheet("""
@@ -135,6 +517,13 @@ class AhoyIndieMedia(QMainWindow):
             }
             QProgressBar::chunk {
                 background-color: #e94560;
+            }
+            QLineEdit {
+                background-color: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 5px;
+                color: white;
+                padding: 5px;
             }
         """)
 
@@ -222,25 +611,67 @@ class AhoyIndieMedia(QMainWindow):
         
         self.content_stack.addWidget(dashboard)
         
-        # Add other pages (Library, Playlists, Downloads)
-        for _ in range(3):
-            page = QWidget()
-            self.content_stack.addWidget(page)
+        # Add other pages
+        self.content_stack.addWidget(QWidget())  # Library page
+        self.content_stack.addWidget(QWidget())  # Playlists page
+        self.downloads_page = DownloadsPage()
+        self.content_stack.addWidget(self.downloads_page)
         
         main_layout.addWidget(self.content_stack)
 
         # Player controls at bottom
         player_frame = GlassFrame()
-        player_layout = QHBoxLayout(player_frame)
+        player_layout = QVBoxLayout(player_frame)
         
+        # Visualization
+        self.visualization = VisualizationWidget()
+        player_layout.addWidget(self.visualization)
+        
+        # Time slider and labels
+        time_layout = QHBoxLayout()
+        self.current_time_label = QLabel("0:00")
+        self.time_slider = TimeSlider()
+        self.total_time_label = QLabel("0:00")
+        time_layout.addWidget(self.current_time_label)
+        time_layout.addWidget(self.time_slider)
+        time_layout.addWidget(self.total_time_label)
+        player_layout.addLayout(time_layout)
+        
+        # Control buttons and volume
+        controls_layout = QHBoxLayout()
+        
+        # Previous track button
+        self.prev_button = GlassButton("⏮")
+        self.prev_button.clicked.connect(self.previous_track)
+        controls_layout.addWidget(self.prev_button)
+        
+        # Play/Pause button
         self.play_button = GlassButton("Play")
         self.play_button.clicked.connect(self.toggle_play)
+        controls_layout.addWidget(self.play_button)
+        
+        # Next track button
+        self.next_button = GlassButton("⏭")
+        self.next_button.clicked.connect(self.next_track)
+        controls_layout.addWidget(self.next_button)
+        
+        # Download button
         self.download_button = GlassButton("Download")
         self.download_button.clicked.connect(self.download_current_track)
+        controls_layout.addWidget(self.download_button)
         
-        player_layout.addWidget(self.play_button)
-        player_layout.addWidget(self.download_button)
+        # Volume control
+        volume_layout = QHBoxLayout()
+        volume_label = QLabel("🔊")
+        self.volume_slider = VolumeSlider()
+        self.volume_slider.valueChanged.connect(self.set_volume)
+        volume_layout.addWidget(volume_label)
+        volume_layout.addWidget(self.volume_slider)
+        controls_layout.addLayout(volume_layout)
         
+        player_layout.addLayout(controls_layout)
+        
+        # Download progress
         self.progress_bar = QProgressBar()
         self.progress_bar.hide()
         player_layout.addWidget(self.progress_bar)
@@ -328,6 +759,15 @@ class AhoyIndieMedia(QMainWindow):
             else:
                 self.download_and_play(song['mp3url'])
 
+    def generate_download_filename(self, song):
+        """Generate a clean filename for downloads"""
+        # Clean the artist and title names to be filesystem-friendly
+        artist = "".join(c for c in song['artist'] if c.isalnum() or c in (' ', '-', '_')).strip()
+        title = "".join(c for c in song['title'] if c.isalnum() or c in (' ', '-', '_')).strip()
+        
+        # Format: Artist - Title.mp3
+        return f"{artist} - {title}.mp3"
+
     def download_current_track(self):
         if not self.track_list.currentItem():
             return
@@ -335,7 +775,10 @@ class AhoyIndieMedia(QMainWindow):
         current_index = self.track_list.currentRow()
         song = self.music_data['songs'][current_index]
         
-        local_path = f"downloads/{song['id']}.mp3"
+        # Generate the new filename
+        filename = self.generate_download_filename(song)
+        local_path = os.path.join("downloads", filename)
+        
         if os.path.exists(local_path):
             QMessageBox.information(self, "Already Downloaded", 
                                   "This track is already downloaded!")
@@ -355,6 +798,7 @@ class AhoyIndieMedia(QMainWindow):
         self.progress_bar.hide()
         self.downloaded_tracks.add(path)
         self.save_downloaded_tracks()
+        self.downloads_page.refresh_downloads_list()
         QMessageBox.information(self, "Download Complete", 
                               "Track has been downloaded successfully!")
 
@@ -381,6 +825,62 @@ class AhoyIndieMedia(QMainWindow):
             except:
                 pass
         event.accept()
+
+    def update_playback_position(self):
+        if self.is_playing:
+            try:
+                pos = pygame.mixer.music.get_pos() / 1000  # Convert to seconds
+                self.current_time_label.setText(self.format_time(pos))
+                self.time_slider.setValue(int(pos))
+            except:
+                pass
+
+    def format_time(self, seconds):
+        minutes = int(seconds // 60)
+        seconds = int(seconds % 60)
+        return f"{minutes}:{seconds:02d}"
+
+    def set_volume(self, value):
+        pygame.mixer.music.set_volume(value / 100)
+
+    def previous_track(self):
+        if self.track_list.currentRow() > 0:
+            self.track_list.setCurrentRow(self.track_list.currentRow() - 1)
+            self.play_current_track()
+
+    def next_track(self):
+        if self.track_list.currentRow() < self.track_list.count() - 1:
+            self.track_list.setCurrentRow(self.track_list.currentRow() + 1)
+            self.play_current_track()
+
+    def play_current_track(self):
+        if self.track_list.currentItem():
+            current_index = self.track_list.currentRow()
+            song = self.music_data['songs'][current_index]
+            
+            local_path = f"downloads/{song['id']}.mp3"
+            if os.path.exists(local_path):
+                pygame.mixer.music.load(local_path)
+            else:
+                self.download_and_play(song['mp3url'])
+                return
+            
+            pygame.mixer.music.play()
+            self.play_button.setText("Pause")
+            self.is_playing = True
+            
+            # Update total time
+            try:
+                duration = librosa.get_duration(path=local_path)
+                self.total_time_label.setText(self.format_time(duration))
+                self.time_slider.setMaximum(int(duration))
+            except:
+                pass
+
+    def start_new_batch(self):
+        """Start a new download batch with a new ID"""
+        self.current_batch_id = str(uuid.uuid4())[:8]
+        self.batch_start_time = datetime.now()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -6,4 +6,6 @@ requests==2.31.0
 pillow==10.2.0
 google-cloud-storage==2.14.0
 python-dotenv==1.0.1
-pygame==2.5.2 
+pygame==2.5.2
+librosa==0.10.1
+numpy==1.26.4 
