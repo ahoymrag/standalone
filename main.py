@@ -394,20 +394,10 @@ class DownloadsPage(QWidget):
         header.setStyleSheet("font-size: 24px; font-weight: bold; color: white;")
         layout.addWidget(header)
         
-        # Buttons layout
-        buttons_layout = QHBoxLayout()
-        
         # Open folder button
         open_folder_btn = GlassButton("Open Downloads Folder")
         open_folder_btn.clicked.connect(self.open_downloads_folder)
-        buttons_layout.addWidget(open_folder_btn)
-        
-        # New batch button
-        new_batch_btn = GlassButton("Start New Batch")
-        new_batch_btn.clicked.connect(self.start_new_batch)
-        buttons_layout.addWidget(new_batch_btn)
-        
-        layout.addLayout(buttons_layout)
+        layout.addWidget(open_folder_btn)
         
         # Downloads list
         self.downloads_list = QListWidget()
@@ -434,16 +424,9 @@ class DownloadsPage(QWidget):
         downloads_dir = Path("downloads")
         if downloads_dir.exists():
             for file in downloads_dir.glob("*.mp3"):
-                # Extract batch ID from filename
-                batch_id = file.stem.split('_')[-1]
-                item = QListWidgetItem(f"{file.stem} [Batch: {batch_id}]")
+                item = QListWidgetItem(file.stem)
                 item.setData(Qt.ItemDataRole.UserRole, str(file))
                 self.downloads_list.addItem(item)
-
-    def start_new_batch(self):
-        self.parent().start_new_batch()
-        QMessageBox.information(self, "New Batch Started", 
-                              f"New download batch started with ID: {self.parent().current_batch_id}")
 
     def open_downloads_folder(self):
         downloads_path = Path("downloads").absolute()
@@ -460,7 +443,7 @@ class PodcastCard(GlassFrame):
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(15)
 
-        # Cover Art
+        # Cover Art (now clickable)
         cover_label = QLabel()
         pixmap = QPixmap()
         try:
@@ -471,6 +454,8 @@ class PodcastCard(GlassFrame):
             pixmap.fill(QColor("#333"))
         cover_label.setPixmap(pixmap.scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         cover_label.setFixedSize(80, 80)
+        cover_label.setCursor(Qt.CursorShape.PointingHandCursor)  # Show pointer cursor on hover
+        cover_label.mousePressEvent = lambda e: self.play_podcast()  # Make clickable
         layout.addWidget(cover_label)
 
         # Info
@@ -481,9 +466,6 @@ class PodcastCard(GlassFrame):
         host = QLabel(f"Host: <b>{podcast['host']}</b>")
         host.setStyleSheet("color: #e94560;")
         info_layout.addWidget(host)
-        category = QLabel(f"Category: {podcast['category']}")
-        category.setStyleSheet("color: #aaa;")
-        info_layout.addWidget(category)
         # Badges
         badge_layout = QHBoxLayout()
         if podcast.get('featured'):
@@ -499,11 +481,24 @@ class PodcastCard(GlassFrame):
         layout.addLayout(info_layout)
 
         # Duration
-        duration = QLabel(podcast['duration'])
+        duration = QLabel(podcast.get('duration', ''))
         duration.setStyleSheet("color: #fff; background: rgba(255,255,255,0.1); border-radius: 6px; padding: 2px 8px;")
         layout.addWidget(duration)
 
         self.setFixedHeight(100)
+
+    def play_podcast(self):
+        # Get the main window instance
+        main_window = self.window()
+        if isinstance(main_window, AhoyIndieMedia):
+            # Set current podcast info for the player
+            main_window.current_podcast = self.podcast
+            # Download and play the podcast
+            main_window.download_and_play(self.podcast['mp3url'])
+            # Update the track list to show the podcast
+            main_window.track_list.clear()
+            main_window.track_list.addItem(f"{self.podcast['title']} - {self.podcast['host']}")
+            main_window.track_list.setCurrentRow(0)
 
 class PodcastsPage(QWidget):
     def __init__(self, podcasts_data, parent=None):
@@ -651,10 +646,14 @@ class AhoyIndieMedia(QMainWindow):
         return pixmap
 
     def load_music_data(self):
-        with open('data/tempRefData/music.json', 'r') as f:
+        with open('data/music_library.json', 'r') as f:
             self.music_data = json.load(f)
 
     def setup_ui(self):
+        # Ensure progress bar exists first
+        self.progress_bar = QProgressBar()
+        self.progress_bar.hide()
+        
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         main_layout = QHBoxLayout(central_widget)
@@ -696,37 +695,32 @@ class AhoyIndieMedia(QMainWindow):
         dashboard = QWidget()
         dashboard_layout = QVBoxLayout(dashboard)
         
-        # Featured section
-        featured_label = QLabel("Featured")
-        featured_label.setStyleSheet("font-size: 20px; font-weight: bold;")
-        dashboard_layout.addWidget(featured_label)
-        
-        featured_scroll = QScrollArea()
-        featured_scroll.setWidgetResizable(True)
-        featured_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        featured_scroll.setStyleSheet("border: none;")
-        
-        featured_content = QWidget()
-        featured_content_layout = QHBoxLayout(featured_content)
-        featured_content_layout.setSpacing(20)
-        
-        for playlist in self.music_data['playlists']:
-            if playlist['featured']:
-                playlist_widget = self.create_playlist_widget(playlist)
-                featured_content_layout.addWidget(playlist_widget)
-        
-        featured_scroll.setWidget(featured_content)
-        dashboard_layout.addWidget(featured_scroll)
+        # Featured section (only if playlists exist)
+        if 'playlists' in self.music_data:
+            featured_label = QLabel("Featured")
+            featured_label.setStyleSheet("font-size: 20px; font-weight: bold;")
+            dashboard_layout.addWidget(featured_label)
+            featured_scroll = QScrollArea()
+            featured_scroll.setWidgetResizable(True)
+            featured_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            featured_scroll.setStyleSheet("border: none;")
+            featured_content = QWidget()
+            featured_content_layout = QHBoxLayout(featured_content)
+            featured_content_layout.setSpacing(20)
+            for playlist in self.music_data['playlists']:
+                if playlist.get('featured'):
+                    playlist_widget = self.create_playlist_widget(playlist)
+                    featured_content_layout.addWidget(playlist_widget)
+            featured_scroll.setWidget(featured_content)
+            dashboard_layout.addWidget(featured_scroll)
         
         # Recent tracks
         recent_label = QLabel("Recent Tracks")
         recent_label.setStyleSheet("font-size: 20px; font-weight: bold;")
         dashboard_layout.addWidget(recent_label)
-        
         self.track_list = QListWidget()
         self.populate_track_list()
         dashboard_layout.addWidget(self.track_list)
-        
         self.content_stack.addWidget(dashboard)
         
         # Add other pages
@@ -747,53 +741,121 @@ class AhoyIndieMedia(QMainWindow):
         self.visualization = VisualizationWidget()
         player_layout.addWidget(self.visualization)
         
-        # Time slider and labels
-        time_layout = QHBoxLayout()
+        # Music player card
+        card = QFrame()
+        card.setStyleSheet("""
+            QFrame {
+                background: rgba(30, 30, 40, 0.18); /* subtle glass effect, no strong color */
+                border-radius: 20px;
+                border: 1px solid rgba(255,255,255,0.10);
+            }
+        """)
+        card_layout = QVBoxLayout(card)
+        card_layout.setContentsMargins(32, 24, 32, 24)
+        card_layout.setSpacing(16)
+        
+        # Song info
+        self.track_title = QLabel("Song Name")
+        self.track_title.setStyleSheet("font-size: 24px; font-weight: bold; color: white;")
+        self.track_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.track_artist = QLabel("Artist Name • Album Name")
+        self.track_artist.setStyleSheet("font-size: 14px; color: #e0e0e0;")
+        self.track_artist.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        card_layout.addWidget(self.track_title)
+        card_layout.addWidget(self.track_artist)
+        
+        # Timeline slider
+        timeline_layout = QHBoxLayout()
         self.current_time_label = QLabel("0:00")
+        self.current_time_label.setStyleSheet("color: #fff; font-size: 12px;")
         self.time_slider = TimeSlider()
-        self.total_time_label = QLabel("0:00")
-        time_layout.addWidget(self.current_time_label)
-        time_layout.addWidget(self.time_slider)
-        time_layout.addWidget(self.total_time_label)
-        player_layout.addLayout(time_layout)
+        self.time_slider.sliderMoved.connect(self.seek_position)
+        self.total_time_label = QLabel("3:45")
+        self.total_time_label.setStyleSheet("color: #fff; font-size: 12px;")
+        timeline_layout.addWidget(self.current_time_label)
+        timeline_layout.addWidget(self.time_slider)
+        timeline_layout.addWidget(self.total_time_label)
+        card_layout.addLayout(timeline_layout)
         
-        # Control buttons and volume
-        controls_layout = QHBoxLayout()
+        # Unified glassy button style
+        glassy_btn_style = """
+            QPushButton {
+                background: rgba(255,255,255,0.18);
+                border: 1px solid rgba(255,255,255,0.18);
+                border-radius: 12px;
+                color: white;
+                font-size: 18px;
+            }
+            QPushButton:hover {
+                background: rgba(255,255,255,0.28);
+                color: #e94560;
+            }
+            QPushButton:pressed {
+                background: rgba(255,255,255,0.35);
+            }
+        """
         
-        # Previous track button
+        # Controls row
+        controls_row = QHBoxLayout()
+        controls_row.setSpacing(18)
+        
+        # Shuffle
+        self.shuffle_button = GlassButton("🔀")
+        self.shuffle_button.setFixedSize(32,32)
+        self.shuffle_button.setStyleSheet(glassy_btn_style)
+        controls_row.addWidget(self.shuffle_button)
+        
+        # Previous
         self.prev_button = GlassButton("⏮")
+        self.prev_button.setFixedSize(40,40)
+        self.prev_button.setStyleSheet(glassy_btn_style)
         self.prev_button.clicked.connect(self.previous_track)
-        controls_layout.addWidget(self.prev_button)
+        controls_row.addWidget(self.prev_button)
         
-        # Play/Pause button
-        self.play_button = GlassButton("Play")
+        # Play/Pause
+        self.play_button = GlassButton("▶️")
+        self.play_button.setFixedSize(56,56)
+        self.play_button.setStyleSheet(glassy_btn_style + "font-size: 24px;")
         self.play_button.clicked.connect(self.toggle_play)
-        controls_layout.addWidget(self.play_button)
+        controls_row.addWidget(self.play_button)
         
-        # Next track button
+        # Next
         self.next_button = GlassButton("⏭")
+        self.next_button.setFixedSize(40,40)
+        self.next_button.setStyleSheet(glassy_btn_style)
         self.next_button.clicked.connect(self.next_track)
-        controls_layout.addWidget(self.next_button)
+        controls_row.addWidget(self.next_button)
         
-        # Download button
-        self.download_button = GlassButton("Download")
+        # Repeat
+        self.repeat_button = GlassButton("🔁")
+        self.repeat_button.setFixedSize(32,32)
+        self.repeat_button.setStyleSheet(glassy_btn_style)
+        controls_row.addWidget(self.repeat_button)
+        
+        card_layout.addLayout(controls_row)
+        
+        # Bottom row: favorite, download, up next
+        bottom_row = QHBoxLayout()
+        self.favorite_button = GlassButton("♥")
+        self.favorite_button.setFixedSize(28,28)
+        self.favorite_button.setStyleSheet(glassy_btn_style)
+        bottom_row.addWidget(self.favorite_button)
+        
+        self.download_button = GlassButton("⬇")
+        self.download_button.setFixedSize(28,28)
+        self.download_button.setStyleSheet(glassy_btn_style)
         self.download_button.clicked.connect(self.download_current_track)
-        controls_layout.addWidget(self.download_button)
+        bottom_row.addWidget(self.download_button)
         
-        # Volume control
-        volume_layout = QHBoxLayout()
-        volume_label = QLabel("🔊")
-        self.volume_slider = VolumeSlider()
-        self.volume_slider.valueChanged.connect(self.set_volume)
-        volume_layout.addWidget(volume_label)
-        volume_layout.addWidget(self.volume_slider)
-        controls_layout.addLayout(volume_layout)
+        bottom_row.addStretch()
+        up_next_label = QLabel("Up Next")
+        up_next_label.setStyleSheet("color: #fff; font-size: 14px; font-weight: 500;")
+        bottom_row.addWidget(up_next_label)
+        card_layout.addLayout(bottom_row)
         
-        player_layout.addLayout(controls_layout)
+        player_layout.addWidget(card)
         
         # Download progress
-        self.progress_bar = QProgressBar()
-        self.progress_bar.hide()
         player_layout.addWidget(self.progress_bar)
         
         main_layout.addWidget(player_frame)
@@ -821,15 +883,42 @@ class AhoyIndieMedia(QMainWindow):
         return widget
 
     def populate_track_list(self):
-        for song in self.music_data['songs']:
-            item_text = f"{song['title']} - {song['artist']}"
+        self.track_list.clear()
+        for song in self.music_data['music_library']:
+            item_text = f"{song['songTitle']} - {song['artist']}"
             self.track_list.addItem(item_text)
 
     def show_dashboard(self):
         self.content_stack.setCurrentIndex(0)
 
     def show_library(self):
+        # Show the music library tab with thumbnails
         self.content_stack.setCurrentIndex(1)
+        # Create or update the music library widget
+        if not hasattr(self, 'music_library_widget'):
+            self.music_library_widget = QWidget()
+            layout = QVBoxLayout(self.music_library_widget)
+            label = QLabel('Music Library')
+            label.setStyleSheet('font-size: 24px; font-weight: bold; color: white;')
+            layout.addWidget(label)
+            self.library_list = QListWidget()
+            self.library_list.setIconSize(QSize(60, 60))
+            for song in self.music_data['music_library']:
+                item = QListWidgetItem()
+                item.setText(f"{song['songTitle']} - {song['artist']}")
+                if song.get('thumbnail'):
+                    pixmap = QPixmap()
+                    try:
+                        img_data = requests.get(song['thumbnail']).content
+                        pixmap.loadFromData(img_data)
+                        item.setIcon(QIcon(pixmap))
+                    except:
+                        pass
+                self.library_list.addItem(item)
+            layout.addWidget(self.library_list)
+            self.content_stack.insertWidget(1, self.music_library_widget)
+        else:
+            self.content_stack.setCurrentWidget(self.music_library_widget)
 
     def show_playlists(self):
         self.content_stack.setCurrentIndex(2)
@@ -844,20 +933,27 @@ class AhoyIndieMedia(QMainWindow):
         try:
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.mp3')
             temp_file.close()
-            
             response = requests.get(url, stream=True)
             with open(temp_file.name, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
-            
             self.temp_files.append(temp_file.name)
-            
             pygame.mixer.music.load(temp_file.name)
             pygame.mixer.music.play()
             self.play_button.setText("Pause")
             self.is_playing = True
-            
+            # Update track info for podcast or song
+            if hasattr(self, 'current_podcast'):
+                self.update_track_info(
+                    self.current_podcast['title'],
+                    f"Host: {self.current_podcast['host']}",
+                    self.current_podcast.get('cover_art')
+                )
+            elif hasattr(self, 'music_data') and self.track_list.currentItem():
+                idx = self.track_list.currentRow()
+                song = self.music_data['music_library'][idx]
+                self.update_track_info(song['songTitle'], song['artist'], song.get('thumbnail'))
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error playing track: {str(e)}")
 
@@ -871,7 +967,7 @@ class AhoyIndieMedia(QMainWindow):
             self.is_playing = False
         else:
             current_index = self.track_list.currentRow()
-            song = self.music_data['songs'][current_index]
+            song = self.music_data['music_library'][current_index]
             
             local_path = f"downloads/{song['id']}.mp3"
             if os.path.exists(local_path):
@@ -886,7 +982,7 @@ class AhoyIndieMedia(QMainWindow):
         """Generate a clean filename for downloads"""
         # Clean the artist and title names to be filesystem-friendly
         artist = "".join(c for c in song['artist'] if c.isalnum() or c in (' ', '-', '_')).strip()
-        title = "".join(c for c in song['title'] if c.isalnum() or c in (' ', '-', '_')).strip()
+        title = "".join(c for c in song['songTitle'] if c.isalnum() or c in (' ', '-', '_')).strip()
         
         # Format: Artist - Title.mp3
         return f"{artist} - {title}.mp3"
@@ -896,7 +992,7 @@ class AhoyIndieMedia(QMainWindow):
             return
 
         current_index = self.track_list.currentRow()
-        song = self.music_data['songs'][current_index]
+        song = self.music_data['music_library'][current_index]
         
         # Generate the new filename
         filename = self.generate_download_filename(song)
@@ -954,7 +1050,6 @@ class AhoyIndieMedia(QMainWindow):
             try:
                 pos = pygame.mixer.music.get_pos() / 1000  # Convert to seconds
                 self.current_time_label.setText(self.format_time(pos))
-                self.time_slider.setValue(int(pos))
             except:
                 pass
 
@@ -979,19 +1074,18 @@ class AhoyIndieMedia(QMainWindow):
     def play_current_track(self):
         if self.track_list.currentItem():
             current_index = self.track_list.currentRow()
-            song = self.music_data['songs'][current_index]
-            
+            song = self.music_data['music_library'][current_index]
             local_path = f"downloads/{song['id']}.mp3"
             if os.path.exists(local_path):
                 pygame.mixer.music.load(local_path)
             else:
                 self.download_and_play(song['mp3url'])
                 return
-            
             pygame.mixer.music.play()
             self.play_button.setText("Pause")
             self.is_playing = True
-            
+            # Update track info
+            self.update_track_info(song['songTitle'], song['artist'], song.get('thumbnail'))
             # Update total time
             try:
                 duration = librosa.get_duration(path=local_path)
@@ -1006,8 +1100,75 @@ class AhoyIndieMedia(QMainWindow):
         self.batch_start_time = datetime.now()
 
     def load_podcasts_data(self):
-        with open('data/tempRefData/podcasts.json', 'r') as f:
+        with open('data/podcasts_library.json', 'r') as f:
             return json.load(f)
+
+    def seek_position(self, position):
+        """Handle timeline dragging"""
+        if pygame.mixer.music.get_busy():
+            pygame.mixer.music.set_pos(position)
+            self.current_time_label.setText(self.format_time(position))
+
+    def skip_time(self, seconds):
+        """Skip forward or backward by specified seconds"""
+        if pygame.mixer.music.get_busy():
+            current_pos = pygame.mixer.music.get_pos() / 1000  # Convert to seconds
+            new_pos = max(0, current_pos + seconds)
+            pygame.mixer.music.set_pos(new_pos)
+            self.current_time_label.setText(self.format_time(new_pos))
+
+    def update_thumbnail(self, url=None):
+        """Update the thumbnail image"""
+        if url:
+            try:
+                response = requests.get(url)
+                pixmap = QPixmap()
+                pixmap.loadFromData(response.content)
+                self.thumbnail_label.setPixmap(pixmap.scaled(
+                    60, 60, 
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation
+                ))
+            except:
+                # Set default thumbnail if loading fails
+                self.thumbnail_label.setPixmap(QPixmap(60, 60))
+        else:
+            # Clear thumbnail
+            self.thumbnail_label.setPixmap(QPixmap(60, 60))
+
+    def toggle_playback_speed(self):
+        """Toggle between different playback speeds"""
+        speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+        current_speed = float(self.speed_button.text().replace('x', ''))
+        current_index = speeds.index(current_speed)
+        next_index = (current_index + 1) % len(speeds)
+        new_speed = speeds[next_index]
+        
+        self.speed_button.setText(f"{new_speed}x")
+        if pygame.mixer.music.get_busy():
+            # Note: pygame doesn't support playback speed directly
+            # This is a placeholder for when we implement a different audio backend
+            pass
+
+    def toggle_mute(self):
+        """Toggle mute state"""
+        if not hasattr(self, 'previous_volume'):
+            self.previous_volume = self.volume_slider.value()
+            self.volume_slider.setValue(0)
+            self.volume_button.setText("🔇")
+        else:
+            self.volume_slider.setValue(self.previous_volume)
+            self.volume_button.setText("🔊")
+            delattr(self, 'previous_volume')
+
+    def update_track_info(self, title, artist=None, cover_url=None):
+        """Update track information display"""
+        self.track_title.setText(title)
+        if artist:
+            self.track_artist.setText(artist)
+        else:
+            self.track_artist.setText("")
+        self.update_thumbnail(cover_url)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

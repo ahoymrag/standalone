@@ -1,0 +1,32 @@
+{
+  "podcasts": [
+    {
+      "id": 1,
+      "title": "The Rob Show #43 - John Bock and John Churchill",
+      "host": "Rob",
+      "mp3url": "https://example.com/robshow43.mp3",
+      "cover_art": "https://example.com/robshow43.jpg"
+    },
+    {
+      "id": 2,
+      "title": "The Rob Show #42 - Michelle Caserta",
+      "host": "Rob",
+      "mp3url": "https://example.com/robshow42.mp3",
+      "cover_art": "https://example.com/robshow42.jpg"
+    },
+    {
+      "id": 3,
+      "title": "The Rob Show #41 - Phil Toran",
+      "host": "Rob",
+      "mp3url": "https://example.com/robshow41.mp3",
+      "cover_art": "https://example.com/robshow41.jpg"
+    },
+    {
+      "id": 4,
+      "title": "My Friend #001 - Thomas King",
+      "host": "Alex Gonzalez",
+      "mp3url": "https://example.com/myfriend001.mp3",
+      "cover_art": "https://example.com/myfriend001.jpg"
+    }
+  ]
+} 
